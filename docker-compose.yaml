@@ -55,13 +55,6 @@ services:
     volumes:
       - keycloak_data:/opt/keycloak/data
 
-  # ✅ Redis (For caching & sessions)
-  # redis:
-  #   image: redis:alpine
-  #   restart: always
-  #   ports:
-  #     - "56379:6379"
-
   # ✅ API Service (Golang + Echo)
   api:
     build:
@@ -77,25 +70,16 @@ services:
       - "52345:2345"
     volumes:
       - ../api:/app
+      - ../layered-infra:/layered-infra
     environment:
       DB_HOST: postgres
       DB_USER: postgres
       DB_PASS: postgres
-      DB_NAME: fitnis
+      DB_NAME: postgres
       REDIS_URL: redis:6379
       KEYCLOAK_ISSUER_URL: http://keycloak:8080/realms/fitnis
       KEYCLOAK_CLIENT_ID: my-client
       KEYCLOAK_CLIENT_SECRET: my-secret
-
-  # ✅ Frontend Service (React/Vue)
-  # frontend:
-  #   build: ./frontend
-  #   restart: always
-  #   depends_on:
-  #     - api
-  #     - keycloak
-  #   ports:
-  #     - "55173:5173"
 
 volumes:
   postgres_data:
